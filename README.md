@@ -1,7 +1,7 @@
 This is the home of ArCode, a tool that facilitates the use of application frameworks to implement tactics and patterns. 
 
 # What is ArCode Plugin?
-ArCode Plugin implements [ArCode](https://github.com/SoftwareDesignLab/ArCode) approach in an interactive IntelliJ IDEA plugin.
+ArCode Plugin implements [ArCode](https://arxiv.org/abs/2102.08372) approach in an interactive IntelliJ IDEA plugin.
 
 # Obtaining ArCode Plugin
 In this section, we provide a step-by-step instruction to walk you through the process of building and using ArCode Plugin.
