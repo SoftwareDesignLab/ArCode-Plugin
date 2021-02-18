@@ -1,0 +1,20 @@
+digraph "DirectedGraph" {
+graph [label="JaasBasedProject.jar"];center=true;fontsize=10;node [ color=black,shape="box"fontsize=10,fontcolor=black,fontname=Arial];edge [ color=black,fontsize=10,fontcolor=black,fontname=Arial]; 
+	"CallbackHandler.<init>()V"[fillcolor ="#CCFFCC", shape="box", style="rounded,filled", color="black" ];
+	"LoginContext.getSubject()Subject;"[fillcolor ="#CCFFFF", shape="box", style="rounded,filled", color="black" ];
+	"LoginContext.<init>(String;CallbackHandler;)V"[fillcolor ="#CCFFCC", shape="box", style="rounded,filled", color="black" ];
+	"END_NODE"[fillcolor ="yellow", shape="oval", style="rounded,filled", color="black" ];
+	"LoginContext.login()V"[fillcolor ="#CCFFFF", shape="box", style="rounded,filled", color="black" ];
+	"LoginContext.logout()V"[fillcolor ="#CCFFFF", shape="box", style="rounded,filled", color="black" ];
+	"START_NODE"[fillcolor ="yellow", shape="oval", style="rounded,filled", color="black" ];
+	"CallbackHandler.<init>()V" -> "LoginContext.<init>(String;CallbackHandler;)V"[color="black",style=dotted, label="" ];
+	"LoginContext.getSubject()Subject;" -> "END_NODE"[color="green",style=dotted, label="" ];
+	"LoginContext.<init>(String;CallbackHandler;)V" -> "LoginContext.getSubject()Subject;"[color="black",style=dotted, label="" ];
+	"LoginContext.<init>(String;CallbackHandler;)V" -> "LoginContext.login()V"[color="black",style=dotted, label="" ];
+	"LoginContext.<init>(String;CallbackHandler;)V" -> "LoginContext.logout()V"[color="black",style=dotted, label="" ];
+	"LoginContext.login()V" -> "LoginContext.getSubject()Subject;"[color="green",style=dotted, label="" ];
+	"LoginContext.login()V" -> "LoginContext.logout()V"[color="green",style=dotted, label="" ];
+	"LoginContext.logout()V" -> "END_NODE"[color="green",style=dotted, label="" ];
+	"START_NODE" -> "CallbackHandler.<init>()V"[color="green",style=dotted, label="" ];
+
+}

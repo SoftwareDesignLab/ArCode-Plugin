@@ -1,0 +1,45 @@
+<idea-plugin>
+    <id>edu.rit.se.design.ArCodePlugin</id>
+    <name>ArCodePlugin</name>
+    <vendor email="as8308@rit.edu" url="http://design.rit.edu">Software Design and Productivity Lab (RIT)</vendor>
+
+    <version>
+        1.0-SNAPSHOT
+    </version>
+
+    <description><![CDATA[
+    This is the plugin for ArCode which brings ArCode functionalities to Intellij IDEA
+    ]]></description>
+
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="edu.rit.se.design.ArCodePlugin.settings.ArCodePersistentStateComponent"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <group id="ArCodePlugin" text="ArCode" description="Runs ArCode on the current project" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"></add-to-group>
+        </group>
+
+        <group id="ArCodePluginSettings" text="ArCode" description="Runs ArCode on the current project">
+            <action class="edu.rit.se.design.ArCodePlugin.settings.ArCodeSettingsAction" id="ArCodePlugin.Actions.settings" text="ArCode Settings">
+            </action>
+            <add-to-group group-id="ArCodePlugin" anchor="first"></add-to-group>
+        </group>
+
+        <group id="ArCodePluginRunner" text="ArCode" description="Runs ArCode on the current project">
+            <action class="edu.rit.se.design.ArCodePlugin.recommendation.ArCodeRunnerAction" id="ArCodePlugin.Actions.runner" text="ArCode Runner">
+
+            </action>
+            <add-to-group group-id="ArCodePlugin" anchor="last"></add-to-group>
+
+        </group>
+
+
+
+    </actions>
+</idea-plugin>

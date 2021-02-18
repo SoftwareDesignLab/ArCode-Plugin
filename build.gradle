@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.6.5'
+}
+
+group 'edu.rit.se.design.arcode'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Default
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    // https://mvnrepository.com/artifact/guru.nidi/graphviz-java
+    compile ( 'guru.nidi:graphviz-java:0.18.0'){
+        exclude group: 'org.slf4j'
+//        exclude group: 'org.apache.batik'
+    }
+//    compile group: 'org.graalvm.js', name: 'js', version: '20.0.0'
+    // https://mvnrepository.com/artifact/org.webjars.npm/viz.js-for-graphviz-java
+    compile group: 'org.webjars.npm', name: 'viz.js-for-graphviz-java', version: '2.1.3'
+// https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8_macosx_x86_64
+    implementation group: 'com.eclipsesource.j2v8', name: 'j2v8_macosx_x86_64', version: '4.6.0'
+    implementation files('/Users/as8308/Desktop/Ali/RIT/My Drive/Research/Projects/ArCode/Implementation/arcode/target/arcode-1.0.1-SNAPSHOT-jar-with-dependencies.jar')
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    version '2020.3.1'
+}
+patchPluginXml {
+    changeNotes """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>"""
+}
+test {
+    useJUnitPlatform()
+}
+/*
+runIde {
+    maxHeapSize = "2g"
+}*/
