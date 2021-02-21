@@ -11,12 +11,15 @@ Whenever we reach a stable version, we build the plugin and release it as a zip 
 
 ## Building ArCode Plugin from source code
 In order to build the plugin from source code, you need to have gradle installed on your machine. The link to Gradle can be found from [here](https://gradle.org/).
-Please use below command to build the ArCode Plugin and install it on your IntelliJ IDEA:
+Please use below command to build the ArCode Plugin:
 ```
-gradle buildPlugin publishPlugin
+gradle buildPlugin
 ```
 
-If the process finishes with success, ArCode Plugin file is created and is ready to be used.
+If the process finishes with success, ArCode Plugin zip file is created in build\distributions directory.
+
+To install the plugin on your IDE open IntelliJ IDEA, go to Plugins, and click on "Install Plugin from Disk...". Then select the built ArCode Plugin zip file.
+You may need to restart your IDE to be able to see ArCode menue under Tools menu.
 
 # Using ArCode Plugin
 Once the plugin is installed on your IDE, you may find the ArCode Plugin menu from tools->ArCode menu. There are two sub-menus available. The first sub-menu, Settings, let you config ArCode Plugin.
