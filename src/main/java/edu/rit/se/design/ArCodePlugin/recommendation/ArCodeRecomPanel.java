@@ -5,30 +5,29 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ArCodeRecomPanel extends JPanel implements ActionListener {
-     int ST_WIDTH ;
-     int ST_HEIGHT ;
+    int ST_WIDTH ;
+    int ST_HEIGHT ;
     int ST_COMBO_WIDTH = 200;
     int ST_COMBO_HEIGHT = 60;
 
     StringBuilder programCodeSummery;
-//    List<StringBuilder> recommendedCodeSummeries;
+    //    List<StringBuilder> recommendedCodeSummeries;
     StringBuilder programGraamDot;
 //    List<StringBuilder> recommendedGraamsDot;
 
     DotGraphSourceCodeViewerPanel sourceDotGraphSourceCodeViewerPanel;
     DotGraphSourceCodeViewerPanel recomDotGraphSourceCodeViewerPanel;
 
-    Map<Double, Map.Entry<StringBuilder, StringBuilder>> scoreRecommendationMap;
+//    Map<Double, Map.Entry<StringBuilder, StringBuilder>> scoreRecommendationMap;
 
+    List<Recommendation> recommendationList;
 
-    public ArCodeRecomPanel(StringBuilder programCodeSummery, StringBuilder programGraamDot, Map<Double, Map.Entry<StringBuilder, StringBuilder>> scoreRecommendationMap, int width, int height){
+    public ArCodeRecomPanel(StringBuilder programCodeSummery, StringBuilder programGraamDot, List<Recommendation> recommendationList, int width, int height){
         super(/*new GridBagLayout()*/);
 
         ST_WIDTH = width;
@@ -39,7 +38,7 @@ public class ArCodeRecomPanel extends JPanel implements ActionListener {
         this.programGraamDot = programGraamDot ;
 //        setRecommendedGraamsDot( recommendedGraamsDot );
 
-        this.scoreRecommendationMap = scoreRecommendationMap;
+        this.recommendationList = recommendationList;
         init();
         setBackground( Color.WHITE );
     }
@@ -58,9 +57,16 @@ public class ArCodeRecomPanel extends JPanel implements ActionListener {
 //        JLabel scorePanelLabel = new JLabel("Rec:");
 
         scorePanelLabel.setAlignmentX( LEFT_ALIGNMENT );
-        double maxScore = new ArrayList<>( scoreRecommendationMap.keySet() ).stream().max((o1, o2) -> o1 == o2 ? 0 : (o1 > o2 ? 1 : -1)).get();
+        Comparator<Recommendation> recommendationComparator = new Comparator<Recommendation>() {
+            @Override
+            public int compare(Recommendation o1, Recommendation o2) {
+                return o1.getScore() == o2.getScore() ? 0 : (o1.getScore() < o2.getScore() ? 1 : -1);
+            }
+        };
+
+        Recommendation bestRecom = recommendationList.stream().max( recommendationComparator ).get();
         JLabel deviationLabel = null;
-        if( maxScore < 1 ) {
+        if( bestRecom.getScore() < 1 ) {
             deviationLabel = new JLabel( "Deviation Detected!" );
             deviationLabel.setForeground(Color.RED);
         }
@@ -77,11 +83,10 @@ public class ArCodeRecomPanel extends JPanel implements ActionListener {
         scorePanel.add( scorePanelLabel, BorderLayout.LINE_START );
         scorePanel.setPreferredSize( new Dimension( ST_COMBO_WIDTH, ST_COMBO_HEIGHT ) );
         Double highestScore = null;
-        if( scoreRecommendationMap.size() > 0 )
-            highestScore = new ArrayList<>( scoreRecommendationMap.keySet() ).stream().sorted(Comparator.reverseOrder()).collect( Collectors.toList() ).get(0);
 
-        StringBuilder recomDot = highestScore != null ? scoreRecommendationMap.get( highestScore ).getKey() : new StringBuilder();
-        StringBuilder recomCode = highestScore != null ? scoreRecommendationMap.get( highestScore ).getValue() : new StringBuilder();
+
+        StringBuilder recomDot = bestRecom.getDotGraph();
+        StringBuilder recomCode = bestRecom.getCodeSnippet();
 
         recomDotGraphSourceCodeViewerPanel = new DotGraphSourceCodeViewerPanel( "Recommended Implementation", recomCode, recomDot, (ST_WIDTH - 10 - ST_COMBO_WIDTH) / 2, ST_HEIGHT - 20 );
 
@@ -98,28 +103,21 @@ public class ArCodeRecomPanel extends JPanel implements ActionListener {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
 //        gridBagConstraints.ipadx = ST_COMBO_WIDTH;
-        List<Double> scores = new ArrayList<>();
+        List<Recommendation> comboItems = new ArrayList<>();
 //        List<Color> colors = new ArrayList<>();
-        DecimalFormat df = new DecimalFormat("#.##");
 
 
 
 
-        if( scoreRecommendationMap.size() > 0 )
-            new ArrayList<>( scoreRecommendationMap.keySet() ).stream().sorted(Comparator.reverseOrder()).collect( Collectors.toList() ).forEach( aDouble -> {
-                scores.add(  aDouble );
+        recommendationList.stream().sorted(recommendationComparator).forEach( recommendation -> {
+                    comboItems.add(  recommendation );
 //                colors.add( getScoreColor( aDouble ) );
-            }
-            );
+                }
+        );
 
-        JComboBox<Double> comboBox = new JComboBox<Double>( scores.toArray( new Double[0] ));
+        JComboBox<Recommendation> comboBox = new JComboBox<>( new Vector<>( comboItems ));
 
         ComboBoxRenderer renderer = new ComboBoxRenderer( comboBox );
-
-/*
-        renderer.setColors( colors.toArray( new Color[0] ));
-*/
-        renderer.setValues( scores.toArray( new Double[0]));
 
         comboBox.setRenderer(renderer);
 
@@ -144,17 +142,17 @@ public class ArCodeRecomPanel extends JPanel implements ActionListener {
 //        setEnabled(true);
     }
 
-    void updateRecommendation( Double recScore ){
-        recomDotGraphSourceCodeViewerPanel.update( scoreRecommendationMap.get( recScore ).getValue(), scoreRecommendationMap.get( recScore ).getKey() );
+    void updateRecommendation( Recommendation recommendation ){
+        recomDotGraphSourceCodeViewerPanel.update( recommendation.getCodeSnippet(), recommendation.getDotGraph() );
 
     }
 
 
     /** Listens to the combo box. */
     public void actionPerformed(ActionEvent e) {
-        JComboBox scores = (JComboBox)e.getSource();
-        Double scoresSelectedItem = (Double)scores.getSelectedItem();
-        updateRecommendation(scoresSelectedItem);
+        JComboBox comboBox = (JComboBox)e.getSource();
+        Recommendation selectedItem = (Recommendation) comboBox.getSelectedItem();
+        updateRecommendation(selectedItem);
     }
 
 }

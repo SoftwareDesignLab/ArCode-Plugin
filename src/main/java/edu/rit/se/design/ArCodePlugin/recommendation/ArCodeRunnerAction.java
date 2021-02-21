@@ -3,13 +3,6 @@ package edu.rit.se.design.ArCodePlugin.recommendation;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-/*import edu.rit.se.design.arcode.fspec2recom.FSpec2Recom;
-import edu.rit.se.design.arcode.fspec2recom.GraphEditDistanceInfo;
-import edu.rit.se.design.arcode.fspecminer.SpecMiner;
-import edu.rit.se.design.arcode.fspecminer.graam.GRAAM;
-import edu.rit.se.design.arcode.fspecminer.graam.GRAAMBuilder;
-import edu.rit.se.design.arcode.fspecminer.util.common.CommonConstants;*/
-import edu.rit.se.design.ArCodePlugin.ArCodeRunnerDialogWrapper;
 import edu.rit.se.design.ArCodePlugin.settings.ArCodePersistentStateComponent;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.engine.GraphvizV8Engine;
@@ -25,7 +18,7 @@ import java.io.IOException;
 public class ArCodeRunnerAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        Graphviz.useEngine( new GraphvizV8Engine() );
+        Graphviz.useEngine(new GraphvizV8Engine());
 //        new ArCodeRunnerDialogWrapper(e.getProject(), true).showAndGet();
         ArCodePersistentStateComponent arCodePersistentStateComponent = ArCodePersistentStateComponent.getInstance();
         String framework = arCodePersistentStateComponent.getState().getFramework();
@@ -36,21 +29,30 @@ public class ArCodeRunnerAction extends AnAction {
         String exclusionFilePath = arCodePersistentStateComponent.getState().getExclusionFilePath();
         String testProjectsPath = arCodePersistentStateComponent.getState().getProjectJarPath();
 
+        JFrame arCodeRecomFrame = null;
         try {
-            ArCodeRecomFrameBuilder.createFrame( framework, frameworkJarPath, frameworkPackage, trainProjectsPath, minerType, exclusionFilePath, testProjectsPath, trainProjectsPath );
+            arCodeRecomFrame = new ArCodeRecomFrameBuilder().createFrame(framework, frameworkJarPath, frameworkPackage, trainProjectsPath, minerType, exclusionFilePath, testProjectsPath, trainProjectsPath);
         } catch (ClassHierarchyException classHierarchyException) {
             classHierarchyException.printStackTrace();
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-/*
-        JFrame arCodeRecomFrame = new ArCodeRecomFrame( e.getProject() );
+
+
         arCodeRecomFrame.pack();
         arCodeRecomFrame.setLocationRelativeTo(null);
         arCodeRecomFrame.setVisible(true);
-*/
+
 
     }
+
+/*    @Override
+    public void actionPerformed(@NotNull AnActionEvent e) {
+        Graphviz.useEngine(new GraphvizV8Engine());
+        new ArCodeRecomDialogWrapper(e.getProject(), true).showAndGet();
+    }*/
+
+
 
 /*    @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
@@ -155,7 +157,7 @@ public class ArCodeRunnerAction extends AnAction {
 
         }*//*
 
-*//*
+     *//*
         if(  ) {
             // Information provided
         }

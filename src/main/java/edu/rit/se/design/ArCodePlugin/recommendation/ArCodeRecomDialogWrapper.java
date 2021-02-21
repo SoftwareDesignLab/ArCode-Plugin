@@ -1,7 +1,10 @@
 package edu.rit.se.design.ArCodePlugin.recommendation;
 
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import edu.rit.se.design.ArCodePlugin.recommendation.ArCodeRecomPanel;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
+import edu.rit.se.design.ArCodePlugin.settings.ArCodePersistentStateComponent;
+import edu.rit.se.design.ArCodePlugin.settings.PluginState;
 import edu.rit.se.design.arcode.fspec2code.ClassHierarchyUtil;
 import edu.rit.se.design.arcode.fspec2recom.CodeGeneratorUtil;
 import edu.rit.se.design.arcode.fspec2recom.FSpec2Recom;
@@ -11,17 +14,16 @@ import edu.rit.se.design.arcode.fspecminer.SpecMiner;
 import edu.rit.se.design.arcode.fspecminer.graam.GRAAM;
 import edu.rit.se.design.arcode.fspecminer.graam.GRAAMBuilder;
 import edu.rit.se.design.arcode.fspecminer.graam.GRAAMVisualizer;
-import guru.nidi.graphviz.engine.Graphviz;
-import guru.nidi.graphviz.engine.GraphvizV8Engine;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ArCodeRecomFrameBuilder {
+public class ArCodeRecomDialogWrapper  extends DialogWrapper {
+
     static int ST_WIDTH = 1750;
     static int ST_HEIGHT = 900;
     static int ST_RECOMMENDATION_CUTOFF = 10;
@@ -31,25 +33,28 @@ public class ArCodeRecomFrameBuilder {
 
     static List<GraphEditDistanceInfo> recommendations;
 
+    public ArCodeRecomDialogWrapper(Project project, boolean canBeParent ) {
+        super(project, canBeParent);
+        init();
+        setTitle( "ArCode Runner" );
+    }
 
-    public static JFrame createFrame(String framework, String frameworkJarPath, String frameworkPackage,
-                                     String trainProjectsPath, String minerType, String exclusionFilePath, String testProjectsPath, String fspecPath) throws ClassHierarchyException, IOException {
-        JFrame frame = new JFrame("ArCode");
-        Graphviz.useEngine(new GraphvizV8Engine());
-        ArCodeRecomPanel mainPanel = createArCodeRecomPanel( framework,  frameworkJarPath,  frameworkPackage,
-                 trainProjectsPath,  minerType,  exclusionFilePath,  testProjectsPath,  fspecPath);
-        frame.getContentPane().add( mainPanel, BorderLayout.CENTER );
-        frame.setPreferredSize(new Dimension(ST_WIDTH, ST_HEIGHT));
-        frame.pack();
-        frame.setLocationRelativeTo( null);
-        frame.setVisible(true);
-
-
-        return frame;
+    @Override
+    protected @Nullable JComponent createCenterPanel() {
+        ArCodePersistentStateComponent arCodePersistentStateComponent = ArCodePersistentStateComponent.getInstance();
+        PluginState state = arCodePersistentStateComponent.getState();
+        try {
+            return createArCodeRecomPanel( state.getFramework(), state.getFrameworkJarPath(), state.getFrameworkPackage(), state.getTrainingProjectsPath(), "FROM_JAR", state.getExclusionFilePath(), state.getProjectJarPath(), state.getfSpecPath() );
+        } catch (ClassHierarchyException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new JPanel();
     }
 
     static ArCodeRecomPanel createArCodeRecomPanel(String framework, String frameworkJarPath, String frameworkPackage,
-     String trainProjectsPath, String minerType, String exclusionFilePath, String testProjectsPath, String fspecPath) throws ClassHierarchyException, IOException {
+                                                   String trainProjectsPath, String minerType, String exclusionFilePath, String testProjectsPath, String fspecPath) throws ClassHierarchyException, IOException {
         try {
             SpecMiner trainProjsSpecMiner = new SpecMiner(framework, frameworkJarPath, frameworkPackage, trainProjectsPath, minerType, exclusionFilePath);
             trainProjsSpecMiner.mineFrameworkSpecificationFromSerializedGRAAMs();

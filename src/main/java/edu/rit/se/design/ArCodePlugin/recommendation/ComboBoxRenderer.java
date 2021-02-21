@@ -5,8 +5,6 @@ import java.awt.*;
 
 public class ComboBoxRenderer extends JPanel implements ListCellRenderer{
     private static final long serialVersionUID = -1L;
-    private Color[] colors;
-    private Double[] values;
 
     JPanel textPanel;
     JLabel text;
@@ -21,17 +19,6 @@ public class ComboBoxRenderer extends JPanel implements ListCellRenderer{
         textPanel.add(text);
     }
 
-    public void setColors(Color[] col)
-    {
-        colors = col;
-    }
-
-    public void setValues(Double[] values)
-    {
-        this.values = values;
-    }
-
-
     @Override
     public Component getListCellRendererComponent(JList list, Object value,
                                                   int index, boolean isSelected, boolean cellHasFocus) {
@@ -44,7 +31,7 @@ public class ComboBoxRenderer extends JPanel implements ListCellRenderer{
         {
             setBackground(Color.WHITE);
         }
-        setForeground( getScoreColor( (Double)value ) );
+        setForeground( getScoreColor( (Recommendation)value ) );
 
  /*       if (colors.length != values.length)
         {
@@ -66,19 +53,19 @@ public class ComboBoxRenderer extends JPanel implements ListCellRenderer{
 
         text.setText(value.toString());
 
-        text.setForeground( getScoreColor((Double) value) );
+        text.setForeground( getScoreColor((Recommendation) value) );
 /*        if (index>-1) {
             text.setForeground(colors[index]);
         }*/
         return text;
     }
 
-    Color getScoreColor( double score ){
-        if( score >= .8 )
+    Color getScoreColor( Recommendation recommendation ){
+        if( recommendation.getScore() >= .8 )
             return new Color(0,153,0); // GREEN
-        if( score >= .5 )
+        if( recommendation.getScore() >= .5 )
             return new Color(51,153,255); // BLUE
-        if( score >= .2 )
+        if( recommendation.getScore() >= .2 )
             return new Color(255,128,0); // BLUE
         return new Color(255,51,51); // BLUE
     }

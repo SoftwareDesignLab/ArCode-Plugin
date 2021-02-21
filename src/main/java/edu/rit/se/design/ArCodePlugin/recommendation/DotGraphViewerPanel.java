@@ -58,6 +58,7 @@ public class DotGraphViewerPanel extends JPanel{
         try {
             MutableGraph mutableGraph = new Parser().read(dot.toString());
             guru.nidi.graphviz.attribute.Label label = (guru.nidi.graphviz.attribute.Label) mutableGraph.graphAttrs().get( "label" );
+            mutableGraph.graphAttrs().add( "dpi", "300" );
             mutableGraph.graphAttrs().add("label", "");
             Graphviz graphviz = Graphviz.fromGraph( mutableGraph );
             bufferedImage = graphviz./*width(500).height(1000).*/render(Format.SVG).toImage();
@@ -80,7 +81,7 @@ public class DotGraphViewerPanel extends JPanel{
 
             ImageIcon tmpImageIcon = new ImageIcon( bufferedImage );
             Image image = tmpImageIcon.getImage(); // transform it
-            Image newimg = image.getScaledInstance((int)justifiedW, (int)justifiedH,  Image.SCALE_SMOOTH); // scale it the smooth way
+            Image newimg = image.getScaledInstance((int)justifiedW, (int)justifiedH,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
             ImageIcon imageIcon = /*new ImageIcon();*/ new ImageIcon(newimg);  // transform it back
 
 
