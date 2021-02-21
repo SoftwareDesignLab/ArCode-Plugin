@@ -63,8 +63,8 @@ public class DotGraphViewerPanel extends JPanel{
             Graphviz graphviz = Graphviz.fromGraph( mutableGraph );
             bufferedImage = graphviz./*width(500).height(1000).*/render(Format.SVG).toImage();
 
-            File imgeOutput = new File( label + ".png" );
-            ImageIO.write( bufferedImage, "png", imgeOutput );
+//            File imgeOutput = new File( label + ".png" );
+//            ImageIO.write( bufferedImage, "png", imgeOutput );
 
 
             int biWidth = bufferedImage.getWidth();
@@ -92,6 +92,7 @@ public class DotGraphViewerPanel extends JPanel{
 //            noPreviewIsAvailable.setVisible(false);
 //            add( new JLabel( new ImageIcon( bufferedImage ) )  );
         } catch (IOException | ParserException | GraphvizException e) {
+            e.printStackTrace();
             noPreviewIsAvailable.setVisible(true);
         }
     }
