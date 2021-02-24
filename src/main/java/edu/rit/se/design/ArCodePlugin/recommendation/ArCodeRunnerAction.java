@@ -19,6 +19,7 @@ public class ArCodeRunnerAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         Graphviz.useEngine(new GraphvizV8Engine());
+
 //        new ArCodeRunnerDialogWrapper(e.getProject(), true).showAndGet();
         ArCodePersistentStateComponent arCodePersistentStateComponent = ArCodePersistentStateComponent.getInstance();
         String framework = arCodePersistentStateComponent.getState().getFramework();

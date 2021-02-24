@@ -50,6 +50,84 @@ public class ArCodeRecomFrameBuilder {
 
     static ArCodeRecomPanel createArCodeRecomPanel(String framework, String frameworkJarPath, String frameworkPackage,
      String trainProjectsPath, String minerType, String exclusionFilePath, String testProjectsPath, String fspecPath) throws ClassHierarchyException, IOException {
+        List<Recommendation> recommendationList = new ArrayList<>();
+
+        try {
+
+            SpecMiner trainProjsSpecMiner = new SpecMiner(framework, frameworkJarPath, frameworkPackage, trainProjectsPath, minerType, exclusionFilePath);
+            trainProjsSpecMiner.mineFrameworkSpecificationFromScratch(true);
+
+            ClassHierarchyUtil classHierarchyUtil = new ClassHierarchyUtil(frameworkJarPath, exclusionFilePath);
+
+
+
+//            ClassHierarchyUtil classHierarchyUtil2 = new ClassHierarchyUtil(frameworkJarPath, exclusionFilePath);
+
+
+            SpecMiner testProjsSpecMiner = new SpecMiner(framework, frameworkJarPath, frameworkPackage, testProjectsPath, minerType, exclusionFilePath);
+            testProjsSpecMiner.mineFrameworkSpecificationFromScratch(false);
+            List<GRAAM> loadedTestGRAAMs = GRAAMBuilder.loadGRAAMsFromSerializedFolder( testProjsSpecMiner.getSerializedGRAAMsFolder() );
+            GRAAM projectGRAAM = loadedTestGRAAMs.get(0);
+            projectGRAAMDot = new GRAAMVisualizer( projectGRAAM ).dotOutput();
+
+            projectCodeSummery = new StringBuilder(CodeGeneratorUtil.GRAAM2Code(projectGRAAM, "Automatically generated code", "currentImplementation", classHierarchyUtil) );
+
+            recommendations = FSpec2Recom.fspec2Recom( trainProjsSpecMiner.getMinedFSpec(), projectGRAAM, ST_RECOMMENDATION_CUTOFF );
+
+            DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+            int maxDistance = recommendations.stream().max( (o1, o2) -> o1.getDistance() - o2.getDistance() ).get().getDistance();
+
+            if( maxDistance == 0 )
+                maxDistance++;
+
+
+
+            int finalMaxDistance = maxDistance;
+            recommendations.stream().forEach(graphEditDistanceInfo -> {
+                StringBuilder recomDot = new SubFSpecVisualizer( graphEditDistanceInfo.getDistSubFSpec() ).dotOutput();
+                StringBuilder recomCode = null;
+                try {
+                    recomCode = new StringBuilder(CodeGeneratorUtil.SubFSpec2Code(graphEditDistanceInfo.getDistSubFSpec(), "Automatically generated code", "recommendedCode", classHierarchyUtil) );
+                    Double score =  (finalMaxDistance + 1 - new Double( graphEditDistanceInfo.getDistance() ) ) / (finalMaxDistance + 1) ;
+
+                    System.out.println( graphEditDistanceInfo.getDistance() );
+
+                    Recommendation recommendation = new Recommendation( Double.parseDouble( decimalFormat.format( score ) ), recomDot, recomCode );
+                    recommendationList.add( recommendation );
+//                scoreRecommendationMap.put( Double.parseDouble( decimalFormat.format( score ) ), new AbstractMap.SimpleEntry<>( recomDot, recomCode ) );
+
+                }/* catch (ClassHierarchyException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (CodeGenerationException e) {
+                e.printStackTrace();
+            }*/
+                catch (Exception e){
+
+                }
+            } );
+
+        }
+        catch ( Exception e ){
+            e.printStackTrace();
+        }
+
+
+
+
+
+        ArCodeRecomPanel arCodeRecomPanel = new ArCodeRecomPanel(projectCodeSummery, projectGRAAMDot, recommendationList, ST_WIDTH - 20, ST_HEIGHT - 20 );
+
+
+        arCodeRecomPanel.setEnabled(true);
+        return arCodeRecomPanel ;
+
+    }
+
+/*    static ArCodeRecomPanel createArCodeRecomPanel(String framework, String frameworkJarPath, String frameworkPackage,
+                                                   String trainProjectsPath, String minerType, String exclusionFilePath, String testProjectsPath, String fspecPath) throws ClassHierarchyException, IOException {
         try {
             SpecMiner trainProjsSpecMiner = new SpecMiner(framework, frameworkJarPath, frameworkPackage, trainProjectsPath, minerType, exclusionFilePath);
             trainProjsSpecMiner.mineFrameworkSpecificationFromSerializedGRAAMs();
@@ -75,14 +153,6 @@ public class ArCodeRecomFrameBuilder {
             e.printStackTrace();
         }
 
-//        Map<Double, Map.Entry<StringBuilder, StringBuilder>> scoreRecommendationMap = new HashMap<>();
-/*        double minDist = recommendations.stream().sorted( (o1, o2) -> o1.getDistance() - o2.getDistance() ).collect(toList()).get(0).getDistance();
-        double maxDist = recommendations.stream().sorted( (o1, o2) -> o2.getDistance() - o1.getDistance() ).collect(toList()).get(0).getDistance();
-
-        minDist++;
-        maxDist++;*/
-
-
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
         int maxDistance = recommendations.stream().max( (o1, o2) -> o1.getDistance() - o2.getDistance() ).get().getDistance();
@@ -101,31 +171,18 @@ public class ArCodeRecomFrameBuilder {
             try {
                 recomCode = new StringBuilder(CodeGeneratorUtil.SubFSpec2Code(graphEditDistanceInfo.getDistSubFSpec(), "Automatically generated code", "recommendedCode", classHierarchyUtil) );
                 Double score =  (finalMaxDistance + 1 - new Double( graphEditDistanceInfo.getDistance() ) ) / (finalMaxDistance + 1) ;
-
                 System.out.println( graphEditDistanceInfo.getDistance() );
-
                 Recommendation recommendation = new Recommendation( Double.parseDouble( decimalFormat.format( score ) ), recomDot, recomCode );
                 recommendationList.add( recommendation );
-//                scoreRecommendationMap.put( Double.parseDouble( decimalFormat.format( score ) ), new AbstractMap.SimpleEntry<>( recomDot, recomCode ) );
-
-            }/* catch (ClassHierarchyException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (CodeGenerationException e) {
-                e.printStackTrace();
-            }*/
+            }
             catch (Exception e){
 
             }
         } );
 
         ArCodeRecomPanel arCodeRecomPanel = new ArCodeRecomPanel(projectCodeSummery, projectGRAAMDot, recommendationList, ST_WIDTH - 20, ST_HEIGHT - 20 );
-
-
         arCodeRecomPanel.setEnabled(true);
         return arCodeRecomPanel ;
-
-    }
+    }*/
 
 }
