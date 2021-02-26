@@ -10,8 +10,12 @@ In this section, we provide a step-by-step instruction to walk you through the p
 Whenever we reach a stable version, we build the plugin and release it as a zip file. You can easily download the latest release from [here](../../releases/). 
 
 ## Building ArCode Plugin from source code
-In order to build the plugin from source code, you need to have gradle installed on your machine. The link to Gradle can be found from [here](https://gradle.org/).
-Please use below command to build the ArCode Plugin:
+In order to build the plugin from source code, you need to have gradle installed on your machine. The link to Gradle can be found from [here](https://gradle.org/). Also, you need to download or build the jar file of [ArCode](https://github.com/SoftwareDesignLab/ArCode). Then, in the build.gradle file of ArCode Plugin, you need to set the path to this jar file throw the following line:
+```
+implementation files('/Users/ali/Academic/RIT/Research/Projects/ArCode/Implementation/arcode/target/arcode-1.1.1-SNAPSHOT-jar-with-dependencies.jar')
+```
+
+Lastly, please use below command to build the ArCode Plugin:
 ```
 gradle buildPlugin
 ```
