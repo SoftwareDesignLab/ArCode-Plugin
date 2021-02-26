@@ -4,14 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Vector;
 
 public class ArCodeRecomPanel extends JPanel implements ActionListener {
-    int ST_WIDTH ;
-    int ST_HEIGHT ;
+    int ST_WIDTH;
+    int ST_HEIGHT;
     int ST_COMBO_WIDTH = 200;
     int ST_COMBO_HEIGHT = 60;
 
@@ -27,68 +26,64 @@ public class ArCodeRecomPanel extends JPanel implements ActionListener {
 
     List<Recommendation> recommendationList;
 
-    public ArCodeRecomPanel(StringBuilder programCodeSummery, StringBuilder programGraamDot, List<Recommendation> recommendationList, int width, int height){
+    public ArCodeRecomPanel(StringBuilder programCodeSummery, StringBuilder programGraamDot, List<Recommendation> recommendationList, int width, int height) {
         super(/*new GridBagLayout()*/);
 
         ST_WIDTH = width;
         ST_HEIGHT = height;
 
-        this.programCodeSummery =  programCodeSummery;
+        this.programCodeSummery = programCodeSummery;
 //        setRecommendedCodeSummeries( recommendedCodeSummeries );
-        this.programGraamDot = programGraamDot ;
+        this.programGraamDot = programGraamDot;
 //        setRecommendedGraamsDot( recommendedGraamsDot );
 
         this.recommendationList = recommendationList;
         init();
-        setBackground( Color.WHITE );
+        setBackground(Color.WHITE);
     }
 
-    void init(){
+    void init() {
 
 
-        sourceDotGraphSourceCodeViewerPanel = new DotGraphSourceCodeViewerPanel( "Current Implementation", programCodeSummery, programGraamDot, (ST_WIDTH - 10 - ST_COMBO_WIDTH) / 2, ST_HEIGHT - 20 );
+        sourceDotGraphSourceCodeViewerPanel = new DotGraphSourceCodeViewerPanel("Current Implementation", programCodeSummery, programGraamDot, (ST_WIDTH - 10 - ST_COMBO_WIDTH) / 2, ST_HEIGHT - 20);
 
         JPanel scoreDeviationPanel = new JPanel();
-        scoreDeviationPanel.setPreferredSize( new Dimension( ST_COMBO_WIDTH, ST_COMBO_HEIGHT + 50 ) );
-        scoreDeviationPanel.setBackground( Color.WHITE );
+        scoreDeviationPanel.setPreferredSize(new Dimension(ST_COMBO_WIDTH, ST_COMBO_HEIGHT + 50));
+        scoreDeviationPanel.setBackground(Color.WHITE);
         JPanel scorePanel = new JPanel();
 //        scorePanel.setLayout( new BoxLayout( scorePanel , BoxLayout.Y_AXIS ) );
         JLabel scorePanelLabel = new JLabel("Recommendation Score:");
 //        JLabel scorePanelLabel = new JLabel("Rec:");
 
-        scorePanelLabel.setAlignmentX( LEFT_ALIGNMENT );
-        Comparator<Recommendation> recommendationComparator = new Comparator<Recommendation>() {
-            @Override
-            public int compare(Recommendation o1, Recommendation o2) {
-                return o1.getScore() == o2.getScore() ? 0 : (o1.getScore() < o2.getScore() ? 1 : -1);
-            }
-        };
+        scorePanelLabel.setAlignmentX(LEFT_ALIGNMENT);
 
-        Recommendation bestRecom = recommendationList.stream().max( recommendationComparator ).get();
+        recommendationList.sort(
+                (rec1, rec2) -> rec1.getScore() > rec2.getScore() ? -1 : (rec1.getScore() == rec2.getScore() ? 0 : 1));
+
+        Recommendation bestRecom = recommendationList.get(0);
         JLabel deviationLabel = null;
-        if( bestRecom.getScore() < 1 ) {
-            deviationLabel = new JLabel( "Deviation Detected!" );
+        if (bestRecom.getScore() < 1) {
+            deviationLabel = new JLabel("Deviation Detected!");
             deviationLabel.setForeground(Color.RED);
-        }
-        else {
-            deviationLabel = new JLabel( "Deviation Not Detected!" );
+        } else {
+            deviationLabel = new JLabel("Deviation Not Detected!");
             deviationLabel.setForeground(Color.GREEN);
         }
 
-        deviationLabel.setFont( new Font( deviationLabel.getFont().getName(), Font.BOLD, deviationLabel.getFont().getSize() ));
+        deviationLabel.setFont(new Font(deviationLabel.getFont().getName(), Font.BOLD, deviationLabel.getFont().getSize()));
 
-        scoreDeviationPanel.add( new JLabel(" " ), BorderLayout.NORTH) ;
+        scoreDeviationPanel.add(new JLabel(" "), BorderLayout.NORTH);
         scoreDeviationPanel.add(deviationLabel, BorderLayout.NORTH);
 
-        scorePanel.add( scorePanelLabel, BorderLayout.LINE_START );
-        scorePanel.setPreferredSize( new Dimension( ST_COMBO_WIDTH, ST_COMBO_HEIGHT ) );
+        scorePanel.add(scorePanelLabel, BorderLayout.LINE_START);
+        scorePanel.setPreferredSize(new Dimension(ST_COMBO_WIDTH, ST_COMBO_HEIGHT));
         Double highestScore = null;
 
 
         StringBuilder recomDot = bestRecom.getDotGraph();
         StringBuilder recomCode = bestRecom.getCodeSnippet();
 
-        recomDotGraphSourceCodeViewerPanel = new DotGraphSourceCodeViewerPanel( "Recommended Implementation", recomCode, recomDot, (ST_WIDTH - 10 - ST_COMBO_WIDTH) / 2, ST_HEIGHT - 20 );
+        recomDotGraphSourceCodeViewerPanel = new DotGraphSourceCodeViewerPanel("Recommended Implementation", recomCode, recomDot, (ST_WIDTH - 10 - ST_COMBO_WIDTH) / 2, ST_HEIGHT - 20);
 
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -97,7 +92,7 @@ public class ArCodeRecomPanel extends JPanel implements ActionListener {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
 //        gridBagConstraints.weightx = 0.4;
-        add( sourceDotGraphSourceCodeViewerPanel, /*gridBagConstraints*/ BorderLayout.LINE_START  );
+        add(sourceDotGraphSourceCodeViewerPanel, /*gridBagConstraints*/ BorderLayout.LINE_START);
 
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridx = 1;
@@ -107,50 +102,50 @@ public class ArCodeRecomPanel extends JPanel implements ActionListener {
 //        List<Color> colors = new ArrayList<>();
 
 
-
-
-        recommendationList.stream().sorted(recommendationComparator).forEach( recommendation -> {
-                    comboItems.add(  recommendation );
+        recommendationList.forEach(recommendation -> {
+                    comboItems.add(recommendation);
 //                colors.add( getScoreColor( aDouble ) );
                 }
         );
 
-        JComboBox<Recommendation> comboBox = new JComboBox<>( new Vector<>( comboItems ));
+        JComboBox<Recommendation> comboBox = new JComboBox<>(new Vector<>(comboItems));
 
-        ComboBoxRenderer renderer = new ComboBoxRenderer( comboBox );
+        ComboBoxRenderer renderer = new ComboBoxRenderer(comboBox);
 
         comboBox.setRenderer(renderer);
 
-        comboBox.addActionListener( this );
+        comboBox.addActionListener(this);
 
-        scorePanel.add( comboBox, BorderLayout.SOUTH );
+        scorePanel.add(comboBox, BorderLayout.SOUTH);
 
         scorePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        scoreDeviationPanel.add( scorePanel, BorderLayout.SOUTH );
+        scoreDeviationPanel.add(scorePanel, BorderLayout.SOUTH);
 
-        add( /*new JLabel( "To Be Filled" )*/ scoreDeviationPanel , /*gridBagConstraints*/ BorderLayout.CENTER );
+        add( /*new JLabel( "To Be Filled" )*/ scoreDeviationPanel, /*gridBagConstraints*/ BorderLayout.CENTER);
 
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
 //        gridBagConstraints.weightx = 0.4;
-        add( recomDotGraphSourceCodeViewerPanel , /*gridBagConstraints*/ BorderLayout.LINE_END );
-        setPreferredSize( new Dimension( ST_WIDTH, ST_HEIGHT ) );
+        add(recomDotGraphSourceCodeViewerPanel, /*gridBagConstraints*/ BorderLayout.LINE_END);
+        setPreferredSize(new Dimension(ST_WIDTH, ST_HEIGHT));
 //        setBorder( BorderFactory.createStrokeBorder(new BasicStroke(1.0f)) );
 
 //        setEnabled(true);
     }
 
-    void updateRecommendation( Recommendation recommendation ){
-        recomDotGraphSourceCodeViewerPanel.update( recommendation.getCodeSnippet(), recommendation.getDotGraph() );
+    void updateRecommendation(Recommendation recommendation) {
+        recomDotGraphSourceCodeViewerPanel.update(recommendation.getCodeSnippet(), recommendation.getDotGraph());
 
     }
 
 
-    /** Listens to the combo box. */
+    /**
+     * Listens to the combo box.
+     */
     public void actionPerformed(ActionEvent e) {
-        JComboBox comboBox = (JComboBox)e.getSource();
+        JComboBox comboBox = (JComboBox) e.getSource();
         Recommendation selectedItem = (Recommendation) comboBox.getSelectedItem();
         updateRecommendation(selectedItem);
     }

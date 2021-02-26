@@ -73,14 +73,15 @@ dependencies {
     // https://mvnrepository.com/artifact/org.ow2.asm/asm-tree
     implementation group: 'org.ow2.asm', name: 'asm-tree', version: '8.0.1'
 
-
-    implementation files('/Users/as8308/Desktop/Ali/RIT/My Drive/Research/Projects/ArCode/Implementation/arcode/target/arcode-1.1.1-SNAPSHOT.jar')
+    // Below, you need to set the path to ArCode jar file obtainable from https://github.com/SoftwareDesignLab/ArCode/releases
+    // Alternatively, you can clone and build ArCode jar file from https://github.com/SoftwareDesignLab/ArCode
+    implementation files('/Users/ali/Academic/RIT/Research/Projects/ArCode/Implementation/arcode/target/arcode-1.1.1-SNAPSHOT-jar-with-dependencies.jar')
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-//    version '2020.3.1'
-    version 'IU-203.6682.168'
+    version '2020.3.1'
+//    version 'IU-203.6682.168'
 }
 patchPluginXml {
     changeNotes """
