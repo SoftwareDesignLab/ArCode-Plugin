@@ -91,7 +91,7 @@ public class DotGraphViewerPanel extends JPanel{
 //            dotView.repaint();
 //            noPreviewIsAvailable.setVisible(false);
 //            add( new JLabel( new ImageIcon( bufferedImage ) )  );
-        } catch (IOException | ParserException | GraphvizException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             noPreviewIsAvailable.setVisible(true);
         }

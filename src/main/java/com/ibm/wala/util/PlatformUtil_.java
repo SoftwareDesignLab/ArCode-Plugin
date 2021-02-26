@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
     This class is a replacement for com.ibm.wala.util.PlatformUtil to make an adhoc fix on getBootClassPathJars() method
  */
 
-public class PlatformUtil {
-    public PlatformUtil() {
+public class PlatformUtil_ {
+    public PlatformUtil_() {
     }
 
     public static boolean onMacOSX() {

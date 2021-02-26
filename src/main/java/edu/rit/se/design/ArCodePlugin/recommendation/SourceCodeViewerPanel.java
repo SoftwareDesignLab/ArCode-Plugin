@@ -59,10 +59,15 @@ public class SourceCodeViewerPanel extends JPanel {
 
     public synchronized void setSourceCode(StringBuilder sourceCode) {
         this.sourceCode = sourceCode;
-        String html = "<html><pre>" + sourceCode.toString().replaceAll("<","&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>")/*.replaceAll(" ", "&ensp")*/ + "</pre></html>";
-        textPane.setText(html);
-        textPane.setSize( textPane.getPreferredSize().width, textPane.getPreferredSize().height );
-
+        try {
+            String html = "<html><pre>" + sourceCode.toString().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>")/*.replaceAll(" ", "&ensp")*/ + "</pre></html>";
+            textPane.setText(html);
+            textPane.setSize(textPane.getPreferredSize().width, textPane.getPreferredSize().height);
+            noPreviewIsAvailable.setVisible(false);
+        }
+        catch (Exception e){
+            noPreviewIsAvailable.setVisible(true);
+        }
 
 /*
         textPane.setStyledDocument( new HTMLDocument() );

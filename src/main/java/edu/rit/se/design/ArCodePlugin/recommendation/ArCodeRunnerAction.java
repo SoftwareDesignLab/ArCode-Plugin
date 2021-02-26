@@ -29,10 +29,11 @@ public class ArCodeRunnerAction extends AnAction {
         String minerType = "FROM_JAR";
         String exclusionFilePath = arCodePersistentStateComponent.getState().getExclusionFilePath();
         String testProjectsPath = arCodePersistentStateComponent.getState().getProjectJarPath();
+        String arcodeJarPath = arCodePersistentStateComponent.getState().getArCodeJarPath();
 
         JFrame arCodeRecomFrame = null;
         try {
-            arCodeRecomFrame = new ArCodeRecomFrameBuilder().createFrame(framework, frameworkJarPath, frameworkPackage, trainProjectsPath, minerType, exclusionFilePath, testProjectsPath, trainProjectsPath);
+            arCodeRecomFrame = new ArCodeRecomFrameBuilder().createFrame(arcodeJarPath, framework, frameworkJarPath, frameworkPackage, trainProjectsPath, minerType, exclusionFilePath, testProjectsPath, trainProjectsPath);
         } catch (ClassHierarchyException classHierarchyException) {
             classHierarchyException.printStackTrace();
         } catch (IOException ioException) {
