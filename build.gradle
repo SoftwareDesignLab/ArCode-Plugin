@@ -75,7 +75,8 @@ dependencies {
 
     // Below, you need to set the path to ArCode jar file obtainable from https://github.com/SoftwareDesignLab/ArCode/releases
     // Alternatively, you can clone and build ArCode jar file from https://github.com/SoftwareDesignLab/ArCode
-    implementation files('/Users/ali/Academic/RIT/Research/Projects/ArCode/Implementation/arcode/target/arcode-1.1.1-SNAPSHOT-jar-with-dependencies.jar')
+    implementation files('../ArCode/Implementation/arcode/target/arcode-1.1.1-SNAPSHOT-jar-with-dependencies.jar')
+
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
