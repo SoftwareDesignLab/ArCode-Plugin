@@ -30,7 +30,7 @@ dependencies {
     }
 //    compile group: 'org.graalvm.js', name: 'js', version: '20.0.0'
     // https://mvnrepository.com/artifact/org.webjars.npm/viz.js-for-graphviz-java
-    compile group: 'org.webjars.npm', name: 'viz.js-for-graphviz-java', version: '2.1.3'
+//    compile group: 'org.webjars.npm', name: 'viz.js-for-graphviz-java', version: '2.1.3'
 // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8_macosx_x86_64
     implementation group: 'com.eclipsesource.j2v8', name: 'j2v8_macosx_x86_64', version: '4.6.0'
 
@@ -71,7 +71,7 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 
     // https://mvnrepository.com/artifact/org.ow2.asm/asm-tree
-    implementation group: 'org.ow2.asm', name: 'asm-tree', version: '8.0.1'
+//    implementation group: 'org.ow2.asm', name: 'asm-tree', version: '8.0.1'
 
     // Below, you need to set the path to ArCode jar file obtainable from https://github.com/SoftwareDesignLab/ArCode/releases
     // Alternatively, you can clone and build ArCode jar file from https://github.com/SoftwareDesignLab/ArCode

@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ArCodeRecomFrameBuilder {
-    static int ST_WIDTH = 1750;
-    static int ST_HEIGHT = 900;
+    static int ST_WIDTH = Math.min( 1750, (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 20 );
+    static int ST_HEIGHT = Math.min( 900, (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 20 );;
     static int ST_RECOMMENDATION_CUTOFF = 10;
 
     static StringBuilder projectGRAAMDot;
