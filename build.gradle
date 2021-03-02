@@ -21,7 +21,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 // https://mvnrepository.com/artifact/org.ow2.asm/asm-tree
-    compile group: 'org.ow2.asm', name: 'asm-tree', version: '8.0.1'
+    //compile group: 'org.ow2.asm', name: 'asm-tree', version: '8.0.1'
 
     // https://mvnrepository.com/artifact/guru.nidi/graphviz-java
     compile ( 'guru.nidi:graphviz-java:0.18.0'){

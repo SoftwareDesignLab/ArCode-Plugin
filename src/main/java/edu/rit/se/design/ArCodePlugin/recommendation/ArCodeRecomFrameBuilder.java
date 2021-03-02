@@ -64,7 +64,7 @@ public class ArCodeRecomFrameBuilder {
 
             runProcess(new String[]{"java", "-jar", jarPath, "-framework", framework, "-frameworkJarPath", frameworkJarPath, "-frameworkPackage", frameworkPackage,
                     "-trainProjectsPath", trainProjectsPath, "-exclusionFilePath", exclusionFilePath, "-testProjectsPath", testProjectsPath,
-                    "-fspecOutputPath", fspecPath, "-mineTrainFromScratch", "false", "-mineTestFromScratch", "true", "-recommendationCutOff", Integer.toString(ST_RECOMMENDATION_CUTOFF)});
+                    "-fspecOutputPath", fspecPath, "-mineTrainFromScratch", "False", "-mineTestFromScratch", "True", "-recommendationCutOff", Integer.toString(ST_RECOMMENDATION_CUTOFF)});
 
             int walkLevel = 1;
 
