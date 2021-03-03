@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2021 - Present. Rochester Institute of Technology
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package edu.rit.se.design.ArCodePlugin.settings;
 
 import com.intellij.openapi.project.Project;
@@ -20,6 +35,11 @@ public class ArCodeSettingsDialogWrapper extends DialogWrapper {
     JTextField arCodeJarPath = new JTextField();
     JTextField projectJarPath = new JTextField();
     JTextField exclusionFilePath = new JTextField();
+    JRadioButton trainFromScratch = new JRadioButton("Yes");
+    JRadioButton notTrainFromScratch = new JRadioButton( "No");
+    JRadioButton testFromScratch = new JRadioButton("Yes");
+    JRadioButton notTestFromScratch = new JRadioButton("No");
+
 
     public ArCodeSettingsDialogWrapper(Project project, boolean canBeParent ) {
         super(project, canBeParent);
@@ -35,6 +55,10 @@ public class ArCodeSettingsDialogWrapper extends DialogWrapper {
             arCodeJarPath.setText( arCodePersistentStateComponent.getState().getArCodeJarPath() );
             projectJarPath.setText( arCodePersistentStateComponent.getState().getProjectJarPath() );
             exclusionFilePath.setText( arCodePersistentStateComponent.getState().getExclusionFilePath() );
+            trainFromScratch.setSelected( arCodePersistentStateComponent.getState().getTrainFromScratch() );
+            notTrainFromScratch.setSelected( !arCodePersistentStateComponent.getState().getTrainFromScratch() );
+            testFromScratch.setSelected( arCodePersistentStateComponent.getState().getTestFromScratch() );
+            notTestFromScratch.setSelected( !arCodePersistentStateComponent.getState().getTestFromScratch() );
         }
     }
 
@@ -57,8 +81,25 @@ public class ArCodeSettingsDialogWrapper extends DialogWrapper {
         panel.add( createLabel( "Framework Package" ), gb.nextLine().next().weightx(0.2) );
         panel.add( frameworkPackage, gb.next().weightx(0.8) );
 
+        ButtonGroup buttonGroupTrain = new ButtonGroup();
+        buttonGroupTrain.add( trainFromScratch );
+        buttonGroupTrain.add( notTrainFromScratch );
+        panel.add( createLabel( "Mine FSpec From Scratch" ), gb.nextLine().next().weightx(0.2) );
+        panel.add( trainFromScratch, gb.next().weightx(0.4) );
+        panel.add( notTrainFromScratch, gb.next().weightx(0.4) );
+
         panel.add( createLabel( "FSpec Path" ), gb.nextLine().next().weightx(0.2) );
         panel.add( fSpecPath, gb.next().weightx(0.8) );
+
+        panel.add( createLabel( "Training Projects Path" ), gb.nextLine().next().weightx(0.2) );
+        panel.add( trainingProjectsPath, gb.next().weightx(0.8) );
+
+        ButtonGroup buttonGroupTest = new ButtonGroup();
+        buttonGroupTest.add( testFromScratch );
+        buttonGroupTest.add( notTestFromScratch );
+        panel.add( createLabel( "Create a Fresh GRAAM" ), gb.nextLine().next().weightx(0.2) );
+        panel.add( testFromScratch, gb.next().weightx(0.4) );
+        panel.add( notTestFromScratch, gb.next().weightx(0.4) );
 
         panel.add( createLabel( "Project Jar Path" ), gb.nextLine().next().weightx(0.2) );
         panel.add( projectJarPath, gb.next().weightx(0.8) );
@@ -66,8 +107,6 @@ public class ArCodeSettingsDialogWrapper extends DialogWrapper {
         panel.add( createLabel( "Exclusion File Path" ), gb.nextLine().next().weightx(0.2) );
         panel.add( exclusionFilePath, gb.next().weightx(0.8) );
 
-        panel.add( createLabel( "Training Projects Path" ), gb.nextLine().next().weightx(0.2) );
-        panel.add( trainingProjectsPath, gb.next().weightx(0.8) );
         panel.setPreferredSize( new Dimension( 400, 200 ) );
         panel.setEnabled(true);
         return panel;
@@ -92,6 +131,9 @@ public class ArCodeSettingsDialogWrapper extends DialogWrapper {
         arCodePersistentStateComponent.getState().setFrameworkJarPath( frameworkJarPath.getText() );
         arCodePersistentStateComponent.getState().setProjectJarPath( projectJarPath.getText() );
         arCodePersistentStateComponent.getState().setTrainingProjectsPath( trainingProjectsPath.getText() );
+        arCodePersistentStateComponent.getState().setTestFromScratch( testFromScratch.isSelected() );
+        arCodePersistentStateComponent.getState().setTrainFromScratch( trainFromScratch.isSelected() );
+
 
         super.doOKAction();
     }

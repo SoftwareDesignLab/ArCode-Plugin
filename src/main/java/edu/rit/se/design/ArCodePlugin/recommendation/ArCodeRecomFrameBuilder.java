@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2021 - Present. Rochester Institute of Technology
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package edu.rit.se.design.ArCodePlugin.recommendation;
 
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -34,10 +49,10 @@ public class ArCodeRecomFrameBuilder {
 
 
     public static JFrame createFrame(String arcodeJarPath, String framework, String frameworkJarPath, String frameworkPackage,
-                                     String trainProjectsPath, String minerType, String exclusionFilePath, String testProjectsPath, String fspecPath) throws ClassHierarchyException, IOException {
+                                     String trainProjectsPath, String minerType, String exclusionFilePath, String testProjectsPath, String fspecPath, boolean trainFromScratch, boolean testFromScratch) throws ClassHierarchyException, IOException {
         JFrame frame = new JFrame("ArCode");
         ArCodeRecomPanel mainPanel = createArCodeRecomPanel(arcodeJarPath, framework, frameworkJarPath, frameworkPackage,
-                trainProjectsPath, minerType, exclusionFilePath, testProjectsPath, fspecPath);
+                trainProjectsPath, minerType, exclusionFilePath, testProjectsPath, fspecPath, trainFromScratch, testFromScratch);
         frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
         frame.setPreferredSize(new Dimension(ST_WIDTH, ST_HEIGHT));
         frame.pack();
@@ -54,7 +69,7 @@ public class ArCodeRecomFrameBuilder {
 
 
     static ArCodeRecomPanel createArCodeRecomPanel(String arcodeJarPath, String framework, String frameworkJarPath, String frameworkPackage,
-                                                   String trainProjectsPath, String minerType, String exclusionFilePath, String testProjectsPath, String fspecPath) throws ClassHierarchyException, IOException {
+                                                   String trainProjectsPath, String minerType, String exclusionFilePath, String testProjectsPath, String fspecPath, boolean trainFromScratch, boolean testFromScratch) throws ClassHierarchyException, IOException {
         List<Recommendation> recommendationList = new ArrayList<>();
 
         try {
@@ -64,7 +79,7 @@ public class ArCodeRecomFrameBuilder {
 
             runProcess(new String[]{"java", "-jar", jarPath, "-framework", framework, "-frameworkJarPath", frameworkJarPath, "-frameworkPackage", frameworkPackage,
                     "-trainProjectsPath", trainProjectsPath, "-exclusionFilePath", exclusionFilePath, "-testProjectsPath", testProjectsPath,
-                    "-fspecOutputPath", fspecPath, "-mineTrainFromScratch", "False", "-mineTestFromScratch", "True", "-recommendationCutOff", Integer.toString(ST_RECOMMENDATION_CUTOFF)});
+                    "-fspecOutputPath", fspecPath, "-mineTrainFromScratch", Boolean.toString(trainFromScratch), "-mineTestFromScratch", Boolean.toString( testFromScratch ), "-recommendationCutOff", Integer.toString(ST_RECOMMENDATION_CUTOFF)});
 
             int walkLevel = 1;
 
